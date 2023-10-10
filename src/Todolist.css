@@ -1,0 +1,7 @@
+.list-item_done {
+    opacity: 0.4;
+}
+
+.filter-btn_active {
+    background-color: red;
+}
