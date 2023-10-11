@@ -9,13 +9,15 @@ export type TaskType = {
 };
 
 type PropsType = {
+  id: string
   title: string,
   tasks: Array<TaskType>,
-  removeTask: (id: string) => void,
-  setTasksFilter: (option: TaskFilterType) => void,
-  addTask: (title: string) => void,
-  changeIsDone: (taskId: string, isDone: boolean) => void,
-  filter: TaskFilterType
+  removeTask: (id: string, todolistId: string) => void,
+  setTasksFilter: (option: TaskFilterType, todolistId: string) => void,
+  addTask: (title: string, todolistId: string) => void,
+  changeIsDone: (taskId: string, isDone: boolean, todolistId: string) => void,
+  filter: TaskFilterType,
+  removeTodolist: (todolistId: string) => void
 };
 
 type InputEventType = React.ChangeEvent<HTMLInputElement>;
@@ -40,7 +42,7 @@ export function Todolist(props: PropsType) {
 
   const addTask = () => {
     if (newTaskTitle.trim() !== "") {
-      props.addTask(newTaskTitle.trim());
+      props.addTask(newTaskTitle.trim(), props.id);
       setNewTaskTitle("");
       setErrorText(null);
     } else {
@@ -48,13 +50,23 @@ export function Todolist(props: PropsType) {
     }
   }
 
-  const setAllOption = () => props.setTasksFilter("all");
-  const setActiveOption = () => props.setTasksFilter("active");
-  const setCompletedOption = () => props.setTasksFilter("completed");
+  const setAllOption = () => props.setTasksFilter("all", props.id);
+  const setActiveOption = () => props.setTasksFilter("active", props.id);
+  const setCompletedOption = () => props.setTasksFilter("completed", props.id);
+
+  const removeTodolist = () => {
+    props.removeTodolist(props.id);
+  }
 
   return (
     <div className="todolist">
-      <h2>{props.title}</h2>
+      <div className="todolist_header">
+        <h2>{props.title}</h2>
+        <button
+          onClick={removeTodolist}
+        >x
+        </button>
+      </div>
       <div>
         <input
           value={newTaskTitle}
@@ -71,11 +83,11 @@ export function Todolist(props: PropsType) {
         {props.tasks.map(task => {
 
             const removeTask = () => {
-              props.removeTask(task.id);
+              props.removeTask(task.id, props.id);
             }
 
             const changeIsDone = (e: InputEventType) => {
-              props.changeIsDone(task.id, e.currentTarget.checked);
+              props.changeIsDone(task.id, e.currentTarget.checked, props.id);
             }
 
             return (

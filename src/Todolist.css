@@ -1,3 +1,7 @@
+.todolist_header {
+    display: flex;
+    }
+
 .list-item_done {
     opacity: 0.4;
 }
